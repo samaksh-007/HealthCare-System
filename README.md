@@ -1,4 +1,5 @@
 # MediCare Connect — Healthcare Support Platform
+Made My Samaksh Parihar
 
 **A full-featured NGO healthcare support web app with multi-API AI fallback.**
 
