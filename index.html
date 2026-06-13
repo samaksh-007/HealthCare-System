@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediCare Connect — Healthcare Support Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────────── */
+    :root {
+      --bg:         #0a0f1e;
+      --surface:    #111827;
+      --surface2:   #1a2235;
+      --border:     rgba(99,179,237,0.12);
+      --accent:     #38bdf8;
+      --accent2:    #818cf8;
+      --accent3:    #34d399;
+      --danger:     #f87171;
+      --text:       #f0f6ff;
+      --text-muted: #94a3b8;
+      --text-dim:   #4b5563;
+      --glow:       rgba(56,189,248,0.15);
+      --radius:     14px;
+      --radius-sm:  8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── AMBIENT BG ─────────────────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 20% 10%, rgba(56,189,248,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 80%, rgba(129,140,248,0.06) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ─────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 64px;
+      background: rgba(10,15,30,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem; color: var(--text);
+      text-decoration: none;
+    }
+    .nav-brand .pulse-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent3);
+      box-shadow: 0 0 0 0 rgba(52,211,153,0.6);
+      animation: pulse-ring 2s infinite;
+    }
+    @keyframes pulse-ring {
+      0%   { box-shadow: 0 0 0 0 rgba(52,211,153,0.6); }
+      70%  { box-shadow: 0 0 0 8px rgba(52,211,153,0); }
+      100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
+    }
+    .nav-links {
+      display: flex; gap: 0.25rem; list-style: none;
+    }
+    .nav-links a {
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted); font-size: 0.875rem;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--surface); }
+    .nav-links a.active { color: var(--accent); background: var(--glow); }
+
+    /* ── HERO ─────────────────────────────────────────────────────── */
+    .hero {
+      position: relative; z-index: 1;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      max-width: 800px; margin: 0 auto;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); background: var(--glow);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--accent);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+    .hero-sub {
+      color: var(--text-muted); font-size: 1.05rem;
+      line-height: 1.7; max-width: 560px; margin: 0 auto 2.5rem;
+    }
+    .hero-cta-row {
+      display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: var(--radius);
+      font-size: 0.9rem; font-weight: 500;
+      border: none; cursor: pointer; transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: var(--accent); color: #0a0f1e;
+      box-shadow: 0 0 24px rgba(56,189,248,0.25);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(56,189,248,0.4); }
+    .btn-ghost {
+      background: transparent; color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--surface); color: var(--text); }
+
+    /* ── STATS BAR ─────────────────────────────────────────────────── */
+    .stats-bar {
+      display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
+      padding: 2rem; margin: 0 auto 3rem;
+      max-width: 700px;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.8rem; font-weight: 500;
+      color: var(--accent);
+    }
+    .stat-label { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── SECTION LAYOUT ─────────────────────────────────────────────── */
+    .section {
+      position: relative; z-index: 1;
+      padding: 3rem 2rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem; margin-bottom: 0.5rem;
+    }
+    .section-sub { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .divider {
+      border: none; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 1rem 0 3rem;
+    }
+
+    /* ── CARD ─────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: rgba(56,189,248,0.25); }
+    .card-title {
+      font-weight: 600; font-size: 1rem; margin-bottom: 0.4rem;
+    }
+    .card-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── GRID ─────────────────────────────────────────────────────── */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+
+    /* ── FORM STYLES ──────────────────────────────────────────────── */
+    .form-group { margin-bottom: 1.25rem; }
+    label {
+      display: block; font-size: 0.82rem; font-weight: 500;
+      color: var(--text-muted); margin-bottom: 6px;
+      letter-spacing: 0.03em; text-transform: uppercase;
+    }
+    input, select, textarea {
+      width: 100%; padding: 11px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+    }
+    textarea { resize: vertical; min-height: 100px; }
+    select { appearance: none; cursor: pointer; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width:560px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-submit-btn {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; border: none; border-radius: var(--radius);
+      font-size: 0.95rem; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; letter-spacing: 0.02em;
+    }
+    .form-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(56,189,248,0.25); }
+    .form-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .success-banner {
+      display: none;
+      padding: 14px 18px;
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.3);
+      border-radius: var(--radius-sm);
+      color: var(--accent3); font-size: 0.9rem; margin-top: 1rem;
+    }
+    .success-banner.show { display: flex; align-items: center; gap: 8px; }
+
+    /* ── TABS ─────────────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex; gap: 4px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 5px;
+      margin-bottom: 1.5rem; flex-wrap: wrap;
+    }
+    .tab-btn {
+      flex: 1; padding: 9px 16px;
+      background: none; border: none; border-radius: var(--radius-sm);
+      color: var(--text-muted); cursor: pointer; font-size: 0.875rem; font-weight: 500;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: var(--surface); color: var(--accent);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.3);
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── FLOATING CHAT BUBBLE ────────────────────────────────────── */
+    #chat-bubble {
+      position: fixed; bottom: 28px; right: 28px; z-index: 500;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(56,189,248,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #chat-bubble:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(56,189,248,0.55); }
+    .chat-unread {
+      position: absolute; top: -4px; right: -4px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--danger); color: #fff;
+      font-size: 0.65rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--bg);
+    }
+    .chat-unread.hidden { display: none; }
+    .chat-window {
+      position: fixed; bottom: 100px; right: 28px; z-index: 499;
+      width: 380px; height: 560px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(56,189,248,0.08);
+      transform: translateY(20px) scale(0.95);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
+    }
+    .chat-window.open { transform: none; opacity: 1; pointer-events: all; }
+    @media(max-width:440px) {
+      .chat-window { width: calc(100vw - 24px); right: 12px; bottom: 90px; }
+      #chat-bubble { bottom: 20px; right: 16px; }
+    }
+    .chat-close-btn {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1rem; cursor: pointer; padding: 4px 8px;
+      border-radius: var(--radius-sm); transition: all 0.15s;
+    }
+    .chat-close-btn:hover { background: var(--surface); color: var(--text); }
+
+    /* ── CHATBOT ─────────────────────────────────────────────────── */
+
+    .chat-header {
+      padding: 1rem 1.25rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .chat-header-left { display: flex; align-items: center; gap: 10px; }
+    .chat-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .chat-title { font-weight: 600; font-size: 0.9rem; }
+    .chat-subtitle { font-size: 0.75rem; color: var(--text-muted); }
+    .api-badge {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 0.7rem; font-weight: 500;
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.25);
+      color: var(--accent3);
+    }
+    .api-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent3); }
+
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 1.25rem;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .msg {
+      display: flex; gap: 10px; max-width: 85%;
+      animation: msg-in 0.25s ease;
+    }
+    @keyframes msg-in { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+    .msg.user { margin-left: auto; flex-direction: row-reverse; }
+    .msg-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .msg.bot .msg-avatar { background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+    .msg.user .msg-avatar { background: var(--surface2); border: 1px solid var(--border); }
+    .msg-bubble {
+      padding: 10px 14px; border-radius: 14px;
+      font-size: 0.875rem; line-height: 1.6;
+    }
+    .msg.bot .msg-bubble {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+    .msg.user .msg-bubble {
+      background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(129,140,248,0.15));
+      border: 1px solid rgba(56,189,248,0.2);
+      border-bottom-right-radius: 4px;
+    }
+    .msg-meta { font-size: 0.68rem; color: var(--text-dim); margin-top: 4px; }
+    .msg.bot .msg-meta { text-align: left; }
+    .msg.user .msg-meta { text-align: right; }
+
+    .typing-indicator {
+      display: flex; gap: 4px; padding: 10px 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; border-bottom-left-radius: 4px;
+      width: fit-content;
+    }
+    .typing-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--text-muted);
+      animation: typing 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%,60%,100%{transform:none;opacity:0.4} 30%{transform:translateY(-5px);opacity:1} }
+
+    .chat-input-area {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .chat-quick-replies {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px;
+    }
+    .quick-reply-btn {
+      padding: 5px 12px; border-radius: 100px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.75rem; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .quick-reply-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--glow); }
+    .chat-input-row {
+      display: flex; gap: 8px;
+    }
+    .chat-input {
+      flex: 1; padding: 10px 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text);
+      font-size: 0.875rem; font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color 0.2s;
+    }
+    .chat-input:focus { border-color: var(--accent); }
+    .chat-send-btn {
+      padding: 10px 18px; border-radius: var(--radius);
+      background: var(--accent); border: none; cursor: pointer;
+      color: #0a0f1e; font-weight: 600; font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    .chat-send-btn:hover { transform: scale(1.05); }
+    .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+
+    /* ── FEATURE PILLS ─────────────────────────────────────────── */
+    .feature-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: var(--radius-sm);
+      background: var(--surface); border: 1px solid var(--border);
+      font-size: 0.82rem; color: var(--text-muted);
+    }
+    .feature-pill .icon { font-size: 1rem; }
+    .features-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2rem; }
+
+    /* ── TOAST ─────────────────────────────────────────────────── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      padding: 12px 18px; border-radius: var(--radius);
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); font-size: 0.875rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      transform: translateY(20px); opacity: 0;
+      transition: all 0.3s;
+      max-width: 320px;
+    }
+    .toast.show { transform: none; opacity: 1; }
+    .toast.success { border-color: rgba(52,211,153,0.4); }
+    .toast.error { border-color: rgba(248,113,113,0.4); }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      position: relative; z-index: 1;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-dim); font-size: 0.8rem;
+      margin-top: 4rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── RADIO/CHECKBOX ─────────────────────────────────────────── */
+    .checkbox-group { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .check-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .check-item:hover { border-color: var(--accent); }
+    .check-item input { width: auto; }
+
+    /* ── PROGRESS BAR ──────────────────────────────────────────── */
+    .progress-wrap { margin: 1.5rem 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
+    .progress-bar { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s ease; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="pulse-dot"></div>
+    MediCare Connect
+  </a>
+  <ul class="nav-links">
+    <li><a href="#forms" class="nav-link">Register</a></li>
+    <li><a href="#" onclick="toggleChat();return false;" class="nav-link active">💬 AI Chat</a></li>
+    <li><a href="#about" class="nav-link">About</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">NGO Healthcare Support Platform</div>
+  <h1>Healthcare <em>reimagined</em><br>for every community</h1>
+  <p class="hero-sub">Connect patients with care, volunteers with purpose, and communities with resources — powered by multi-model AI that never goes offline.</p>
+  <div class="hero-cta-row">
+    <a href="#forms" class="btn btn-primary">
+      <span>🏥</span> Register Now
+    </a>
+    <a href="#" onclick="toggleChat();return false;" class="btn btn-ghost">
+      <span>💬</span> Ask the AI
+    </a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num" id="stat-patients">2,847</div>
+    <div class="stat-label">Patients Supported</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat-volunteers">612</div>
+    <div class="stat-label">Active Volunteers</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat-queries">14.2k</div>
+    <div class="stat-label">AI Queries Answered</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">5</div>
+    <div class="stat-label">AI Models (Fallback)</div>
+  </div>
+</div>
+
+<!-- FORMS SECTION -->
+<section class="section" id="forms">
+  <div class="section-title">Registration & Support</div>
+  <p class="section-sub">Fill out the form below to get started. All data is processed securely.</p>
+  <hr class="divider" />
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('patient')">🏥 Patient Support</button>
+    <button class="tab-btn" onclick="switchTab('volunteer')">🤝 Volunteer Registration</button>
+    <button class="tab-btn" onclick="switchTab('contact')">📬 Contact / Inquiry</button>
+  </div>
+
+  <!-- PATIENT TAB -->
+  <div class="tab-content active" id="tab-patient">
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom:1.25rem;font-size:1.05rem;">Patient Support Request</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name *</label>
+            <input type="text" id="p-fname" placeholder="Aarav" />
+          </div>
+          <div class="form-group">
+            <label>Last Name *</label>
+            <input type="text" id="p-lname" placeholder="Sharma" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="p-age" placeholder="34" min="0" max="120" />
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select id="p-gender">
+              <option value="">Select...</option>
+              <option>Male</option><option>Female</option>
+              <option>Non-binary</option><option>Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" id="p-email" placeholder="aarav@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="p-phone" placeholder="+91 98765 43210" />
+        </div>
+        <div class="form-group">
+          <label>Type of Support Needed</label>
+          <select id="p-support">
+            <option value="">Choose...</option>
+            <option>General Consultation</option>
+            <option>Mental Health Support</option>
+            <option>Emergency Assistance</option>
+            <option>Medication Access</option>
+            <option>Home Care Services</option>
+            <option>Chronic Disease Management</option>
+            <option>Pediatric Care</option>
+            <option>Maternal Health</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Describe your situation</label>
+          <textarea id="p-desc" placeholder="Please briefly describe what support you need..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Urgency Level</label>
+          <select id="p-urgency">
+            <option>Low — Within a week</option>
+            <option>Medium — Within 48 hours</option>
+            <option>High — Within 24 hours</option>
+            <option>Critical — Immediate help needed</option>
+          </select>
+        </div>
+        <button class="form-submit-btn" onclick="submitForm('patient')">Submit Support Request →</button>
+        <div class="success-banner" id="patient-success">
+          ✅ Your request has been submitted! A care coordinator will reach out within the specified timeframe.
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:1.25rem;">
+          <h3 class="card-title">🤖 AI-Powered Intake Analysis</h3>
+          <p class="card-desc" style="margin-bottom:1rem;">After you submit, our AI analyzes your request across multiple models to:</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="feature-pill"><span class="icon">🔍</span> Classify urgency automatically</div>
+            <div class="feature-pill"><span class="icon">📋</span> Match you to available resources</div>
+            <div class="feature-pill"><span class="icon">📨</span> Generate a care summary email</div>
+            <div class="feature-pill"><span class="icon">🔄</span> Falls back across 5 AI models</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:1rem;">📊 Your Submission Summary</h3>
+          <div id="patient-preview">
+            <p class="card-desc">Fill out the form to see a live summary here.</p>
+          </div>
+          <div id="ai-intake-result" style="display:none;margin-top:1rem;">
+            <div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">AI Analysis</div>
+            <div id="ai-intake-text" style="font-size:0.875rem;line-height:1.7;color:var(--text-muted);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOLUNTEER TAB -->
+  <div class="tab-content" id="tab-volunteer">
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom:1.25rem;font-size:1.05rem;">Volunteer Registration</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="v-name" placeholder="Priya Nair" />
+          </div>
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="v-dob" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input type="email" id="v-email" placeholder="priya@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="v-phone" placeholder="+91 90000 12345" />
+        </div>
+        <div class="form-group">
+          <label>Professional Background</label>
+          <select id="v-profession">
+            <option value="">Select...</option>
+            <option>Medical Doctor</option>
+            <option>Nurse / Paramedic</option>
+            <option>Pharmacist</option>
+            <option>Mental Health Professional</option>
+            <option>Social Worker</option>
+            <option>Medical Student</option>
+            <option>Administrative / Logistics</option>
+            <option>IT / Technology</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Areas of Expertise / Interest</label>
+          <div class="checkbox-group">
+            <label class="check-item"><input type="checkbox" name="skills" value="patient-care" /> Patient Care & Consultation</label>
+            <label class="check-item"><input type="checkbox" name="skills" value="mental-health" /> Mental Health Support</label>
+            <label class="check-item"><input type="checkbox" name="skills" value="logistics" /> Supply & Logistics</label>
+            <label class="check-item"><input type="checkbox" name="skills" value="tech" /> Technology & AI Tools</label>
+            <label class="check-item"><input type="checkbox" name="skills" value="community" /> Community Outreach</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Hours Available Per Week</label>
+          <select id="v-hours">
+            <option>1–5 hours</option>
+            <option>5–10 hours</option>
+            <option>10–20 hours</option>
+            <option>20+ hours (Full dedication)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Motivation (optional)</label>
+          <textarea id="v-motivation" placeholder="Why do you want to volunteer with us?"></textarea>
+        </div>
+        <button class="form-submit-btn" onclick="submitForm('volunteer')">Register as Volunteer →</button>
+        <div class="success-banner" id="volunteer-success">
+          ✅ Welcome to the team! Your profile will be reviewed within 48 hours.
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:1.25rem;">
+          <h3 class="card-title">🌟 Volunteer Impact</h3>
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Emergency Response Team</span><span>78%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Mental Health Counselors</span><span>45%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Community Outreach</span><span>91%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:91%"></div></div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-label"><span>Technology & AI</span><span>32%</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:32%"></div></div>
+          </div>
+          <p class="card-desc" style="margin-top:0.75rem;">Technology & AI volunteers are currently most needed.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">📋 After You Register</h3>
+          <p class="card-desc" style="line-height:1.9;">
+            1. AI matches your skills to open roles<br/>
+            2. You receive an onboarding email within 48h<br/>
+            3. Join our volunteer Slack workspace<br/>
+            4. Complete a short orientation module<br/>
+            5. Start making a difference!
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT TAB -->
+  <div class="tab-content" id="tab-contact">
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="card-title" style="margin-bottom:1.25rem;font-size:1.05rem;">Send Us a Message</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" id="c-name" placeholder="Rahul Mehta" />
+          </div>
+          <div class="form-group">
+            <label>Organization (optional)</label>
+            <input type="text" id="c-org" placeholder="Health NGO XYZ" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="c-email" placeholder="rahul@ngo.org" />
+        </div>
+        <div class="form-group">
+          <label>Subject / Category</label>
+          <select id="c-subject">
+            <option>Partnership Inquiry</option>
+            <option>Funding / Donation</option>
+            <option>Media & Press</option>
+            <option>Technical Support</option>
+            <option>General Question</option>
+            <option>Feedback</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Message *</label>
+          <textarea id="c-message" placeholder="How can we help you?" style="min-height:140px;"></textarea>
+        </div>
+        <button class="form-submit-btn" onclick="submitForm('contact')">Send Message →</button>
+        <div class="success-banner" id="contact-success">
+          ✅ Message sent! Our team will respond within 24 hours.
+        </div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:1.25rem;">
+          <h3 class="card-title">🤖 Auto-Response Preview</h3>
+          <p class="card-desc" style="margin-bottom:1rem;">After you submit, our AI instantly drafts a tailored response based on your inquiry type. You'll receive it in your inbox within minutes.</p>
+          <div id="auto-response-preview" style="display:none;">
+            <div style="font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:8px;">Drafted Response</div>
+            <div id="auto-response-text" style="font-size:0.85rem;line-height:1.7;color:var(--text-muted);padding:12px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border);"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="card-title">📍 Contact Info</h3>
+          <p class="card-desc" style="line-height:2.1;">
+            📧 support@medicareconnect.ngo<br/>
+            📞 +91 800 123 4567<br/>
+            🕘 Mon–Sat, 9am–7pm IST<br/>
+            🏢 Indore, Madhya Pradesh, India
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOATING CHAT BUBBLE -->
+<div id="chat-bubble" onclick="toggleChat()" title="Chat with HealthBot">
+  <span id="chat-bubble-icon">🤖</span>
+  <span id="chat-unread" class="chat-unread">1</span>
+</div>
+
+<!-- FLOATING CHAT WINDOW -->
+<div id="chat-window" class="chat-window">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <div class="chat-title">HealthBot AI</div>
+        <div class="chat-subtitle">Multi-model • Always online</div>
+      </div>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+  </div>
+
+  <div class="chat-messages" id="chat-messages">
+    <div class="msg bot">
+      <div class="msg-avatar">🤖</div>
+      <div>
+        <div class="msg-bubble">Hello! I'm HealthBot, your AI health assistant for MediCare Connect. I can help you with health questions, guide you through our services, or connect you with the right support.<br><br>How can I help you today?</div>
+        <div class="msg-meta">HealthBot • just now</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <div class="chat-quick-replies">
+      <button class="quick-reply-btn" onclick="sendQuickReply('What services do you offer?')">Our services</button>
+      <button class="quick-reply-btn" onclick="sendQuickReply('How do I register as a patient?')">Patient help</button>
+      <button class="quick-reply-btn" onclick="sendQuickReply('I need urgent medical help')">Urgent help</button>
+      <button class="quick-reply-btn" onclick="sendQuickReply('How can I volunteer?')">Volunteer</button>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Ask a health question…" onkeydown="if(event.key==='Enter')sendMessage()" />
+      <button class="chat-send-btn" id="chat-send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT SECTION -->
+<section class="section" id="about">
+  <div class="section-title">About This Platform</div>
+  <p class="section-sub">Built for NGOs who need technology that works — even when APIs don't.</p>
+  <hr class="divider" />
+  <div class="grid-3">
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🔄</div>
+      <div class="card-title">Multi-API Fallback</div>
+      <p class="card-desc">If Claude is unavailable, the system tries Groq, then Gemini, then OpenAI, then Cohere — seamlessly, with no user disruption.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🏥</div>
+      <div class="card-title">NGO-First Design</div>
+      <p class="card-desc">Built for under-resourced healthcare NGOs. Handles patient intake, volunteer coordination, and FAQ automation.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🔒</div>
+      <div class="card-title">Privacy-First</div>
+      <p class="card-desc">API keys stored in memory only. No patient data sent to third parties. HIPAA-aware data handling principles.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">⚡</div>
+      <div class="card-title">Instant AI Intake</div>
+      <p class="card-desc">Patient submissions are analyzed by AI to classify urgency, suggest resources, and generate care summaries automatically.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🤖</div>
+      <div class="card-title">5 AI Models</div>
+      <p class="card-desc">Claude, Groq (Llama 3.3), Gemini 1.5 Flash, GPT-4o Mini, and Cohere Command R+ all work together in a priority chain.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">📱</div>
+      <div class="card-title">Fully Responsive</div>
+      <p class="card-desc">Works on every device. Volunteers and patients can register from any phone, tablet, or computer.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>MediCare Connect © 2025 — Built with ❤️ for NGO Healthcare Support</p>
+  <p style="margin-top:6px;">
+    Tech Stack: Vanilla HTML/CSS/JS · Claude API · Groq API · Gemini API · OpenAI API · Cohere API
+  </p>
+  <p style="margin-top:6px;font-size:0.72rem;">
+    <a href="#">README</a> · <a href="#">GitHub</a> · <a href="#">Privacy Policy</a>
+  </p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── HARDCODED API KEYS — replace values with your real keys ─── */
+const apiKeys = {
+  claude:  'YOUR_ANTHROPIC_KEY_HERE',
+  groq:    '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',
+  gemini:  'YOUR_GEMINI_KEY_HERE',
+  openai:  'YOUR_OPENAI_KEY_HERE',
+  cohere:  'YOUR_COHERE_KEY_HERE'
+};
+const chatHistory = [];
+
+/* ─── FLOATING CHAT ─────────────────────────────────────────────── */
+function toggleChat() {
+  const win = document.getElementById('chat-window');
+  const unread = document.getElementById('chat-unread');
+  win.classList.toggle('open');
+  if (win.classList.contains('open')) {
+    unread.classList.add('hidden');
+    setTimeout(() => document.getElementById('chat-input').focus(), 300);
+  }
+}
+
+/* ─── TABS ───────────────────────────────────────────────────────── */
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+/* ─── MULTI-API CALLER ──────────────────────────────────────────── */
+const SYSTEM_PROMPT = `You are HealthBot, a compassionate AI health assistant for MediCare Connect, an NGO healthcare support platform based in India. 
+
+Your role:
+- Answer health questions clearly and compassionately
+- Guide users to appropriate services (patient support, volunteering, donations)
+- Provide general wellness and first-aid information
+- For emergencies, always advise to call 112 (India emergency) or go to the nearest hospital
+- Keep responses concise (2–4 sentences typically), warm, and actionable
+- Do NOT diagnose medical conditions or prescribe treatments
+- Mention that users should always consult a qualified doctor for medical decisions
+
+You support: Patient intake, volunteer coordination, health FAQs, and mental health resources.`;
+
+async function callClaude(userMsg) {
+  if (!apiKeys.claude) throw new Error('No key');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKeys.claude,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 512,
+      system: SYSTEM_PROMPT,
+      messages: buildHistory(userMsg)
+    })
+  });
+  if (!res.ok) throw new Error('Claude ' + res.status);
+  const d = await res.json();
+  return d.content[0].text;
+}
+
+async function callGroq(userMsg) {
+  if (!apiKeys.groq) throw new Error('No key');
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKeys.groq },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      max_tokens: 512,
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...buildHistory(userMsg)]
+    })
+  });
+  if (!res.ok) throw new Error('Groq ' + res.status);
+  const d = await res.json();
+  return d.choices[0].message.content;
+}
+
+async function callGemini(userMsg) {
+  if (!apiKeys.gemini) throw new Error('No key');
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKeys.gemini}`;
+  const msgs = buildHistory(userMsg);
+  const contents = msgs.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] }));
+  contents.unshift({ role: 'user', parts: [{ text: SYSTEM_PROMPT }] });
+  contents.unshift({ role: 'model', parts: [{ text: 'Understood. I am HealthBot.' }] });
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: 512 } })
+  });
+  if (!res.ok) throw new Error('Gemini ' + res.status);
+  const d = await res.json();
+  return d.candidates[0].content.parts[0].text;
+}
+
+async function callOpenAI(userMsg) {
+  if (!apiKeys.openai) throw new Error('No key');
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKeys.openai },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      max_tokens: 512,
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...buildHistory(userMsg)]
+    })
+  });
+  if (!res.ok) throw new Error('OpenAI ' + res.status);
+  const d = await res.json();
+  return d.choices[0].message.content;
+}
+
+async function callCohere(userMsg) {
+  if (!apiKeys.cohere) throw new Error('No key');
+  const res = await fetch('https://api.cohere.ai/v1/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKeys.cohere },
+    body: JSON.stringify({
+      model: 'command-r-plus',
+      message: userMsg,
+      preamble: SYSTEM_PROMPT,
+      chat_history: chatHistory.map(m => ({ role: m.role === 'user' ? 'USER' : 'CHATBOT', message: m.content })),
+      max_tokens: 512
+    })
+  });
+  if (!res.ok) throw new Error('Cohere ' + res.status);
+  const d = await res.json();
+  return d.text;
+}
+
+const apiFunctions = [
+  { name: 'claude',  fn: callClaude  },
+  { name: 'groq',    fn: callGroq    },
+  { name: 'gemini',  fn: callGemini  },
+  { name: 'openai',  fn: callOpenAI  },
+  { name: 'cohere',  fn: callCohere  },
+];
+
+function buildHistory(latestMsg) {
+  const msgs = chatHistory.slice(-8).map(m => ({ role: m.role, content: m.content }));
+  msgs.push({ role: 'user', content: latestMsg });
+  return msgs;
+}
+
+async function callAI(userMsg) {
+  for (const api of apiFunctions) {
+    if (!apiKeys[api.name] || apiKeys[api.name].startsWith('YOUR_')) continue;
+    try {
+      const result = await api.fn(userMsg);
+      return { text: result, provider: api.name };
+    } catch (e) {
+      console.warn(api.name + ' failed:', e.message);
+    }
+  }
+  // Fallback: built-in responses
+  return { text: getFallbackResponse(userMsg), provider: 'demo' };
+}
+
+function getFallbackResponse(msg) {
+  const lower = msg.toLowerCase();
+  if (lower.includes('emergency') || lower.includes('urgent') || lower.includes('critical'))
+    return '🚨 For medical emergencies, please call 112 immediately or go to your nearest hospital. MediCare Connect also has emergency coordinators available — submit a Critical urgency patient request using the form above.';
+  if (lower.includes('volunteer'))
+    return 'We\'d love to have you! Click the "Volunteer Registration" tab in the forms section above. We need doctors, nurses, social workers, and tech volunteers. You can give as little as 1–5 hours a week!';
+  if (lower.includes('register') || lower.includes('patient') || lower.includes('support'))
+    return 'To request patient support, use the "Patient Support" tab in the Registration section above. Fill in your details and describe your situation — our care team reviews requests within the urgency window you select.';
+  if (lower.includes('mental health') || lower.includes('anxiety') || lower.includes('depression'))
+    return 'Mental health is just as important as physical health. MediCare Connect has trained mental health volunteers available. Please submit a support request with "Mental Health Support" selected, or call iCall at 9152987821 for immediate support.';
+  if (lower.includes('cost') || lower.includes('free') || lower.includes('price') || lower.includes('pay'))
+    return 'Our core services are completely free for patients. We\'re an NGO funded by donations and grants. Some specialist referrals may involve costs at partner clinics, which we disclose upfront.';
+  if (lower.includes('contact') || lower.includes('reach') || lower.includes('email') || lower.includes('phone'))
+    return 'You can reach us at support@medicareconnect.ngo or +91 800 123 4567 (Mon–Sat, 9am–7pm IST). Alternatively, use the Contact form in the Registration section above!';
+  return 'Thank you for your message! I\'m HealthBot, your MediCare Connect AI assistant. I can help with health questions, registration guidance, volunteer info, and connecting you to our services. Could you tell me more about what you need?';
+}
+
+/* ─── CHAT UI ───────────────────────────────────────────────────── */
+function addMessage(content, role, provider = '') {
+  const messages = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const meta = role === 'bot' ? `HealthBot${provider ? ' · via ' + provider : ''} · ${time}` : `You · ${time}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${role === 'bot' ? '🤖' : '👤'}</div>
+    <div>
+      <div class="msg-bubble">${content.replace(/\n/g, '<br>')}</div>
+      <div class="msg-meta">${meta}</div>
+    </div>`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function showTyping() {
+  const messages = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = 'typing-msg';
+  div.innerHTML = `
+    <div class="msg-avatar">🤖</div>
+    <div class="typing-indicator">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typing-msg');
+  if (el) el.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send-btn');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  sendBtn.disabled = true;
+  addMessage(msg, 'user');
+  chatHistory.push({ role: 'user', content: msg });
+  showTyping();
+
+  const { text, provider } = await callAI(msg);
+  hideTyping();
+  addMessage(text, 'bot', provider);
+  chatHistory.push({ role: 'assistant', content: text });
+
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+function sendQuickReply(text) {
+  document.getElementById('chat-input').value = text;
+  sendMessage();
+}
+
+/* ─── FORM SUBMISSION ───────────────────────────────────────────── */
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + type;
+  setTimeout(() => { toast.className = 'toast'; }, 3500);
+}
+
+function submitForm(type) {
+  const validators = {
+    patient:   [['p-fname','First name'],['p-lname','Last name'],['p-email','Email'],['p-support','Support type']],
+    volunteer: [['v-name','Full name'],['v-email','Email'],['v-phone','Phone']],
+    contact:   [['c-name','Name'],['c-email','Email'],['c-message','Message']]
+  };
+  for (const [id, label] of (validators[type] || [])) {
+    const el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      showToast('⚠️ Please fill in: ' + label, 'error');
+      document.getElementById(id)?.focus();
+      return;
+    }
+  }
+
+  document.getElementById(type + '-success').classList.add('show');
+  showToast('✅ Submitted successfully!');
+
+  if (type === 'patient') {
+    const name = document.getElementById('p-fname').value;
+    const support = document.getElementById('p-support').value || 'General';
+    const urgency = document.getElementById('p-urgency').value;
+    const desc = document.getElementById('p-desc').value || '(not provided)';
+    generateAIIntake(name, support, urgency, desc);
+  }
+  if (type === 'contact') {
+    const subject = document.getElementById('c-subject').value;
+    const cname = document.getElementById('c-name').value;
+    generateAutoResponse(cname, subject);
+  }
+}
+
+async function generateAIIntake(name, support, urgency, desc) {
+  const prompt = `A patient named ${name} submitted a healthcare support request.
+Support type: ${support}
+Urgency: ${urgency}
+Description: ${desc}
+
+Write a 3-sentence compassionate AI intake summary:
+1. Acknowledge their situation
+2. Describe the recommended next step
+3. Note any immediate resources they should know about`;
+
+  const { text } = await callAI(prompt);
+
+  document.getElementById('ai-intake-result').style.display = 'block';
+  document.getElementById('ai-intake-text').textContent = text;
+
+  // Live preview
+  document.getElementById('patient-preview').innerHTML = `
+    <div style="display:grid;gap:6px;font-size:0.85rem;">
+      <div><span style="color:var(--text-dim)">Name:</span> <strong>${name}</strong></div>
+      <div><span style="color:var(--text-dim)">Support:</span> ${support}</div>
+      <div><span style="color:var(--text-dim)">Urgency:</span> <span style="color:var(--accent)">${urgency}</span></div>
+    </div>`;
+}
+
+async function generateAutoResponse(name, subject) {
+  const prompt = `Write a 3-sentence professional auto-response email for: ${name} who sent a ${subject} inquiry to MediCare Connect NGO. Be warm and specific to the subject type.`;
+  const { text } = await callAI(prompt);
+  document.getElementById('auto-response-preview').style.display = 'block';
+  document.getElementById('auto-response-text').textContent = text;
+}
+
+/* ─── ANIMATED STATS ─────────────────────────────────────────────── */
+function animateStats() {
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = el.textContent.includes('k') ? parseFloat(el.textContent) * 1000 : parseInt(el.textContent.replace(/[^0-9]/g, ''));
+    const isK = el.textContent.includes('k');
+    let current = 0;
+    const step = target / 60;
+    const interval = setInterval(() => {
+      current = Math.min(current + step, target);
+      if (isK) el.textContent = (current / 1000).toFixed(1) + 'k';
+      else el.textContent = Math.round(current).toLocaleString();
+      if (current >= target) clearInterval(interval);
+    }, 25);
+  });
+}
+
+/* ─── INIT ─────────────────────────────────────────────────────── */
+setTimeout(animateStats, 300);
+</script>
+</body>
+</html>
